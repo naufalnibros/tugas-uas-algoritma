@@ -3,10 +3,12 @@ package models;
 public class Result {
     private int sisaStok;
     private int laba;
+    private int aktiva;
 
-    public Result(int sisaStok, int laba) {
+    public Result(int sisaStok, int laba, int aktiva) {
         this.sisaStok = sisaStok;
         this.laba = laba;
+        this.aktiva = aktiva;
     }
 
     public int getSisaStok() {
@@ -25,6 +27,11 @@ public class Result {
         this.laba = laba;
     }
 
+    public int getAktiva() {
+        return aktiva;
+    }
 
-
+    public void setAktiva(int aktiva) {
+        this.aktiva = aktiva;
+    }
 }

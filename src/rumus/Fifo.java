@@ -6,7 +6,7 @@ import models.Result;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Fifo extends Utils implements Utils.OnMessageFifo{
+public class Fifo extends Utils implements Utils.OnMessage {
 
     private int totalKeuntungan                   = 0;
     private final Queue<Barang> queueBarang       = new LinkedList<>();
@@ -25,15 +25,18 @@ public class Fifo extends Utils implements Utils.OnMessageFifo{
 
     public void onPembelian(Barang barang){
         queueBarang.add(barang);
-        onResult(queueBarang, new Result(sisaStok(), totalKeuntungan));
+        onResult(queueBarang, new Result(sisaStok(), totalKeuntungan, aktiva()));
     }
 
     public boolean onPenjualan(Barang barang){
-        onMessageFifoListener(this);
-        if(!onValidation(queueBarang, barang)) return true;
+        onMessageInit(this);
+
+        if(!onValidation(queueBarang, barang, VALIDATION_GENERAL)){
+            onResult(queueBarang, new Result(sisaStok(), totalKeuntungan, aktiva()));
+            return true;
+        }
 
         transaction(barang);
-        onResult(queueBarang, new Result(sisaStok(), totalKeuntungan));
         return true;
     }
 
@@ -50,7 +53,7 @@ public class Fifo extends Utils implements Utils.OnMessageFifo{
             if (persediaan == 0) queueBarang.remove();
 
         } else {
-            if(!onValidation(queueBarang, barang)) isLooping = false;
+            if(!onValidation(queueBarang, barang, VALIDATION_TRANSACTION)) isLooping = false;
 
             while (isLooping) {
                 persediaan = hitungPersediaan(queueBarang.element(), barang);
@@ -62,10 +65,12 @@ public class Fifo extends Utils implements Utils.OnMessageFifo{
 
                 if (persediaan <= 0) queueBarang.remove();
 
-                barang.setQuantity( (barang.getQuantity() + persediaan) );
-
+                barang.setQuantity( (Math.abs(persediaan)) );
             }
         }
+
+        onResult(queueBarang, new Result(sisaStok(), totalKeuntungan, aktiva()));
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 import models.Barang;
 import rumus.Fifo;
+import rumus.Lifo;
 
 import java.util.Scanner;
 
@@ -11,12 +12,13 @@ public class MainActivity {
     private static int CONTEXT_USE;
 
     private static Fifo fifo;
+    private static Lifo lifo;
 
-    static Scanner input = new Scanner(System.in);
-    static boolean isLooping = true;
-    static boolean isProses;
+    private static Scanner input = new Scanner(System.in);
+    private static boolean isLooping = true;
+    private static boolean isProses;
 
-    static void showMenu(){
+    private static void showMenu(){
         System.out.println("\n========= MENU ========");
         System.out.println("[1] FIFO");
         System.out.println("[2] LIFO");
@@ -41,7 +43,7 @@ public class MainActivity {
         }
     }
 
-    static String checkType(int type){
+    private static String checkType(int type){
         switch(type){
             case TYPE_PEMBELIAN:
                 return "PEMBELIAN";
@@ -52,7 +54,7 @@ public class MainActivity {
         }
     }
 
-    static String checkUse(){
+    private static String checkUse(){
         switch(CONTEXT_USE){
             case USE_FIFO:
                 return "FIFO";
@@ -63,7 +65,7 @@ public class MainActivity {
         }
     }
 
-    static void insertBarang(int type){
+    private static void insertBarang(int type){
         Scanner inputBarang = new Scanner(System.in);
 
         System.out.println("\n"
@@ -81,15 +83,17 @@ public class MainActivity {
         switch(type){
             case TYPE_PEMBELIAN:
                 if(CONTEXT_USE == USE_FIFO) fifo.onPembelian(barang);
+                if(CONTEXT_USE == USE_LIFO) lifo.onPembelian(barang);
                 break;
             case TYPE_PENJUALAN:
                 if(CONTEXT_USE == USE_FIFO) fifo.onPenjualan(barang);
+                if(CONTEXT_USE == USE_LIFO) lifo.onPenjualan(barang);
                 break;
         }
 
     }
 
-    static void chooseTransaksi(){
+    private static void chooseTransaksi(){
 
         System.out.println("\n"
                 + "========= ("+ checkUse() +") PILIH TRANSAKSI ========="
@@ -115,7 +119,7 @@ public class MainActivity {
         }
     }
 
-    static void usingFifo(){
+    private static void usingFifo(){
         isProses = true;
         CONTEXT_USE = USE_FIFO;
         fifo = new Fifo();
@@ -125,8 +129,14 @@ public class MainActivity {
         } while (isProses);
     }
 
-    static void usingLifo() {
+    private static void usingLifo() {
+        isProses = true;
+        CONTEXT_USE = USE_LIFO;
+        lifo = new Lifo();
 
+        do {
+            chooseTransaksi();
+        } while (isProses);
     }
 
     public static void main(String[] args) {
