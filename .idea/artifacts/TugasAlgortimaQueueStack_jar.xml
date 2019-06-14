@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TugasAlgortimaQueueStack:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TugasAlgortimaQueueStack_jar</output-path>
+    <root id="archive" name="TugasAlgortimaQueueStack.jar">
+      <element id="module-output" name="TugasAlgortimaQueueStack" />
+    </root>
+  </artifact>
+</component>
